@@ -3,6 +3,8 @@
 
 VAGRANTFILE_API_VERSION = 2
 
+debug_mode = !ENV['DEBUG'].to_s.empty?         # flag based on DEBUG environment variable
+
 ########################
 ## Customization
 ########################
@@ -284,6 +286,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             host: "#{port['host']}",
             host_ip: "#{port['hostIp']}",
             protocol: "#{port['protocol']}"
+    end
+
+    #####################
+    # Proxy configuration
+    #####################
+
+    if Vagrant.has_plugin?("vagrant-proxyconf")
+        puts "DEBUG: proxyconf plugin found -- trying to configure from environment settings!" if debug_mode
+        if ENV["http_proxy"]
+          config.proxy.http  = ENV["http_proxy"]
+          puts "http_proxy   = #{config.proxy.http}" if debug_mode
+        end
+        if ENV["https_proxy"]
+          config.proxy.https = ENV["https_proxy"]
+          puts "https_proxy  = #{config.proxy.https}" if debug_mode
+        end
+        if ENV["no_proxy"]
+          config.proxy.no_proxy = ENV["no_proxy"]
+          puts "no_proxy     = #{config.proxy.no_proxy}" if debug_mode
+        end
     end
 
     #################
