@@ -212,6 +212,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
         v.customize ["modifyvm", :id, "--natdnsproxy1",        "on"]
         v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        # Workaround for https://github.com/hashicorp/vagrant/issues/7648
+        # See also: https://github.com/laravel/homestead/issues/383
+        v.customize ['modifyvm', :id, '--cableconnected1',     'on']
 
         # GFX settings
         v.customize ["modifyvm", :id, "--vram",               configuration['VM']['vram']]
