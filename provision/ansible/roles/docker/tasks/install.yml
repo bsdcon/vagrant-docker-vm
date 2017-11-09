@@ -42,3 +42,8 @@
     state: latest
   with_items:
     - docker-ce
+
+- name: Install Docker Compose
+  pip:
+    name: docker-compose
+    state: latest
