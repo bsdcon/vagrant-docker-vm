@@ -1,19 +1,33 @@
 ---
 
-- name: Deploy docker.service (template)
+- name: Prepare docker.service.d placeholder
+  file:
+    path:    /etc/systemd/system/docker.service.d
+    state:   directory
+    recurse: yes
+    mode:    0755
+
+- name: Apply custom Docker service options
   template:
-    src:   templates/docker.service.j2
-    dest:  /etc/systemd/system/docker.service
+    src:   templates/custom-opts.conf.j2
+    dest:  /etc/systemd/system/docker.service.d/custom-opts.conf
     owner: vagrant
     group: root
-    mode:  0775
+    mode:  0644
   notify:
     - Restart Docker
 
-- name: Install docker-compose
-  pip:
-    name: docker-compose
-    state: latest
+# Since Docker is installed *after* the VM is created, the vagrant-proxyconf plugin
+# won't apply any proxy configuration for Docker on first startup...
+- name: Workaround for vagrant-proxyconf first startup
+  template:
+    src:   templates/http-proxy-workaround.conf.j2
+    dest:  /etc/systemd/system/docker.service.d/http-proxy-workaround.conf
+    owner: vagrant
+    group: root
+    mode:  0644
+  notify:
+    - Restart Docker
 
 #############################
 # Apparmor profile
