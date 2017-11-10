@@ -5,15 +5,15 @@
     path:    /etc/systemd/system/docker.service.d
     state:   directory
     recurse: yes
-    mode:    0775
+    mode:    0755
 
-- name: Apply custom docker service opts
+- name: Apply custom Docker service options
   template:
-    src:   templates/docker.service.j2
+    src:   templates/custom-opts.conf.j2
     dest:  /etc/systemd/system/docker.service.d/custom-opts.conf
     owner: vagrant
     group: root
-    mode:  0664
+    mode:  0644
   notify:
     - Restart Docker
 
