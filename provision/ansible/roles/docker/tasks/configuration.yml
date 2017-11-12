@@ -34,6 +34,10 @@
   notify:
     - Restart Docker
 
+# Complete any pending Docker service restarts to be prepared for next actions
+# where we may need it running with correct configuration (e.g. proxy settings)
+- meta: flush_handlers
+
 #############################
 # Apparmor profile
 #############################

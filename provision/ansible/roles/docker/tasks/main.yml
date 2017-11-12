@@ -8,10 +8,6 @@
   tags:
     - bootstrap
 
-# Need to immediately restart Docker services to properly handle the next
-# actions where we may need it running with correct configuration
-- meta: flush_handlers
-
 - include: maintenance.yml
   tags:
     - bootstrap
