@@ -12,3 +12,8 @@
 
 - name: Start firewall
   command: 'service firewall-vm restart'
+
+# Since this impacts Docker, we need to complete any pending restarts, before
+# attempting to bring up any containers, otherwise running the handler late
+# will bring down any containers that we (re)create
+- meta: flush_handlers
