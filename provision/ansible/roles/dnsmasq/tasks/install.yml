@@ -1,5 +1,24 @@
 ---
 
+# Prevent dnsmasq service from overwriting resolv.conf
+# so that host DNS settings are retained (for Docker usage)
+# https://github.com/bsdcon/vagrant-docker-vm/issues/8
+# Note: must be done early, before dnsmasq service is installed+started
+- name: Prepare dnsmasq.service.d placeholder
+  file:
+    path:    /etc/systemd/system/dnsmasq.service.d
+    state:   directory
+    recurse: yes
+    mode:    0755
+
+- name: Prepare systemd override for dnsmasq
+  copy:
+    src:   templates/workaround-resolv.conf
+    dest:  /etc/systemd/system/dnsmasq.service.d/workaround-resolv.conf
+    owner: vagrant
+    group: root
+    mode:  0644
+
 - name: Install dnsmasq
   apt:
     pkg:   '{{ item }}'
