@@ -29,6 +29,10 @@
   notify:
     - Restart Docker
 
+# Systemd needs to load the above applied changes
+- name: Reload systemd configuration
+  command: 'systemctl daemon-reload'
+
 #############################
 # Apparmor profile
 #############################

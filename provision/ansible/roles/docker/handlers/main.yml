@@ -4,8 +4,4 @@
   command: 'service apparmor reload'
 
 - name: Restart Docker
-  command: '{{ item }}'
-  with_items:
-    - systemctl daemon-reload
-    - systemctl enable docker
-    - systemctl restart docker
+  command: 'service docker restart'

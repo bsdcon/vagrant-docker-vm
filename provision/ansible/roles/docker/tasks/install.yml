@@ -43,6 +43,9 @@
   with_items:
     - docker-ce
 
+- name: Enable Docker service
+  command: 'systemctl enable docker'
+
 - name: Install Docker Compose
   pip:
     name: docker-compose
