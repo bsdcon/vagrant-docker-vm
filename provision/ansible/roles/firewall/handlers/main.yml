@@ -1,4 +1,5 @@
 ---
 
-- name: Restart Docker
-  command: 'service docker restart'
+# already defined in 'docker' role
+#- name: Restart Docker
+#  command: 'service docker restart'

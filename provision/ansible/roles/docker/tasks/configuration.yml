@@ -14,8 +14,7 @@
     owner: vagrant
     group: root
     mode:  0644
-  notify:
-    - Restart Docker
+  register: docker_cust_opts
 
 # Since Docker is installed *after* the VM is created, the vagrant-proxyconf plugin
 # won't apply any proxy configuration for Docker on first startup...
@@ -26,8 +25,18 @@
     owner: vagrant
     group: root
     mode:  0644
+  register: docker_proxy_workaround
+
+# Systemd needs to reload (and service restarted) when changes are applied above
+- name: Reload systemd configuration
+  command: 'systemctl daemon-reload'
+  when: docker_cust_opts.changed or docker_proxy_workaround.changed
   notify:
     - Restart Docker
+
+# Complete any pending Docker service restarts to be prepared for next actions
+# where we may need it running with correct configuration (e.g. proxy settings)
+- meta: flush_handlers
 
 #############################
 # Apparmor profile
