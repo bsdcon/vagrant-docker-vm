@@ -1,8 +1,8 @@
 ---
 
-- name: Install zram (compressed swap in memory)
+- name: Install swapspace (dynamic swap space manager)
   apt:
-    pkg:   zram-config
+    pkg:   swapspace
     state: present
 
 - name: Install haveged (random number generator daemon)

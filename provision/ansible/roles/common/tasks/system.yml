@@ -6,17 +6,23 @@
     regexp: '^#?TMPTIME=0'
     line:   'TMPTIME=0'
 
-- name: Disable blank console screensaver
+- name: Update boot settings (disable console screensaver, enable zswap)
   lineinfile:
     dest:   '/etc/default/grub'
     regexp: '{{ item.regexp }}'
     line:   '{{ item.line }}'
   with_items:
-   - { regexp: '^GRUB_CMDLINE_LINUX_DEFAULT=', line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet consoleblank=0"' }
+   - { regexp: '^GRUB_CMDLINE_LINUX_DEFAULT=', line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet consoleblank=0 zswap.enabled=1"' }
    - { regexp: '^GRUB_TIMEOUT=', line: 'GRUB_TIMEOUT=0' }
    - { regexp: '^GRUB_HIDDEN_TIMEOUT=', line: 'GRUB_TIMEOUT=0' }
   notify:
     - Update grub
+
+# https://en.wikipedia.org/wiki/Zswap
+# https://askubuntu.com/a/361321
+- name: Immediately enable zswap (if available)
+  shell: echo 1 > /sys/module/zswap/parameters/enabled
+  ignore_errors: yes
 
 - name: Setup System Hostname
   hostname:
